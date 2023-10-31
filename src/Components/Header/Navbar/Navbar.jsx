@@ -1,16 +1,43 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from '../../../assets/logo.svg'
+import { useContext } from "react";
+import { AuthContext } from "../../../Auth/AuthProvider/AuthProvider";
 
 const Navbar = () => {
+
+  const {user, logOut} =  useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () =>{
+    logOut()
+    .then(() =>{
+      alert('logout successfully')
+    })
+    .catch(error =>{
+      console.log(error);
+    })
+    navigate('/')
+  }
 
     const navbar = <>
     
         <div className="flex flex-col lg:flex-row gap-2">
             <li><NavLink to="/">Home</NavLink></li>
             <li><NavLink to="/about">About</NavLink></li>
-            <li><NavLink to="/services">Services</NavLink></li>
-            <li><NavLink to="/blogs">Blog</NavLink></li>
-            <li><NavLink to="/contact">Contact</NavLink></li>
+            {/* <li><NavLink to="/services">Services</NavLink></li> */}
+            {/* <li><NavLink to="/blogs">Blog</NavLink></li> */}
+            {/* <li><NavLink to="/contact">Contact</NavLink></li> */}
+            {
+              user?.email ? 
+              <>
+              <li><NavLink to="/bookings">My Bookings</NavLink></li>
+              <li> <button onClick={handleLogout}>Logout</button> </li>
+
+              </>
+               
+              :
+              <li><NavLink to="/login">Login</NavLink></li>
+            }
         </div>
     </>
   return (
@@ -48,7 +75,7 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end">
-        <Link to="/login" className="btn">Login</Link>
+        <Link to="/login" className="btn bg-transparent border-1 border-yellow-600">Appointment</Link>
       </div>
     </div>
   );
